@@ -1,10 +1,12 @@
-import AuthPage from "./pages/AuthPage"
+import SessionManager from "./components/SessionManager"
+import { AuthManager } from "./components/AuthManager"
 
 function App() {
+
   return (
-    <>
-      <AuthPage />
-    </>
+    <AuthManager>
+      <SessionManager />
+    </AuthManager>
   )
 }
 
