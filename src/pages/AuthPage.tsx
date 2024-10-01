@@ -4,6 +4,7 @@ import GoogleSignInButton from "../components/GoogleSignInButton";
 import { AuthContext } from "../components/AuthManager";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import ViewState from "../enums/ViewState";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 enum Mode {
     SIGNIN = 1,
@@ -207,7 +208,7 @@ export default function AuthPage() {
 
                 {state == ViewState.LOADING ? 
                     <div className="absolute rounded-[40px] top-0 left-0 w-full h-full bg-white opacity-85 flex justify-center">
-                        <div className="border-gray-300 h-[25px] w-[25px] animate-spin rounded-full border-[4px] border-t-secondary-teal my-auto" />
+                        <LoadingSpinner bgColor="border-gray-300" spinColor="border-t-secondary-teal" />
                     </div>
                 :
                     null

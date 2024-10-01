@@ -2,7 +2,8 @@ enum ViewState {
     DEFAULT = 1,
     READY,
     ERROR,
-    LOADING
+    LOADING,
+    DONE
 }
 
 export default ViewState
