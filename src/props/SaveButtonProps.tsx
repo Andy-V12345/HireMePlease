@@ -1,8 +1,8 @@
 import { Posting } from "../firebase/FirestoreFunctions";
 
-interface PostingsTableProps {
+interface SaveButtonProps {
     postings: Posting[]
     setPostings: React.Dispatch<React.SetStateAction<Posting[]>>
 }
 
-export default PostingsTableProps
+export default SaveButtonProps

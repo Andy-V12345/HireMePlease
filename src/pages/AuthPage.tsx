@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import AuthTextInput from "../components/AuthTextInput";
 import GoogleSignInButton from "../components/GoogleSignInButton";
@@ -162,9 +163,9 @@ export default function AuthPage() {
     }, [email, password, confirmPassword])
 
     return (
-        <div className="bg-secondary-gray w-full h-full absolute flex justify-center">
-            <div className={`relative my-auto h-5/6 ${mode == Mode.SIGNIN ? `max-h-[575px]` : `max-h-[675px]`} w-1/2 max-w-[500px]`}>
-                <div className="bg-white rounded-[30px] my-auto h-full w-full p-[45px] flex flex-col justify-between gap-8 overflow-y-scroll">
+        <div className="sm:bg-secondary-gray bg-white w-full h-full absolute flex justify-center">
+            <div className={`relative my-auto h-5/6 ${mode == Mode.SIGNIN ? `max-h-[575px]` : `max-h-[675px]`} w-full sm:w-1/2 md:max-w-[500px]`}>
+                <div className="sm:bg-white rounded-[30px] my-auto h-full w-full p-[30px] sm:p-[45px] flex flex-col justify-between gap-8 overflow-y-scroll">
                     <h1 className="text-3xl font-black text-primary-gray">Hire Me Please</h1>
 
                     <AuthTextInput label={"Email"} placeholder={"hiremeplease@gmail.com"} value={email} setValue={setEmail} isSecure={false} isError={emailError !== ""} errorMsg={emailError} />

@@ -1,15 +1,25 @@
 import { initializeApp } from "firebase/app"
 import { firebaseConfig } from "./FirebaseConfig"
-import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore"
 import ApplicationStatus from "../enums/ApplicationStatus"
 import { Edit } from "../components/EditingContext"
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
-export interface Posting {
+export type Posting = {
     id: string,
-    data: DocumentData
+    data: PostingData
+}
+
+export type PostingData = {
+    company: string,
+    role: string,
+    locations: string,
+    url: string,
+    date_posted: string,
+    appDate: string,
+    appStatus: number
 }
 
 export async function getUserPostings(uid: string) {
@@ -24,8 +34,9 @@ export async function getUserPostings(uid: string) {
     return userPostings
 }
 
-export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: string) {
+export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: string, postings: Posting[], setPostings: React.Dispatch<React.SetStateAction<Posting[]>>) {
     const userPostings = await getUserPostings(uid)
+    const postingsCopy = [...postings]
 
     for (const id in edits) {
         if (id in userPostings && edits[id].appStatus == ApplicationStatus.NOTAPPLIED) {
@@ -34,8 +45,19 @@ export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: str
         }
 
         userPostings[id] = edits[id]
+        
+        postingsCopy.map(posting => {
+            if (posting.id == id) {
+                return { ...posting, appStatus: edits[id].appStatus, appDate: edits[id].appDate }
+            }
+            else {
+                return posting
+            }
+        })
+
     }
 
+    setPostings(postingsCopy)
     await setDoc(doc(db, "userPostings", uid), userPostings)
 }
 
@@ -45,11 +67,22 @@ export async function getAllPostings(uid: string) {
     const postings: Posting[] = []
 
     querySnapshot.forEach((doc) => {
-        const postingData = {
-            ...doc.data(),
+        const docData = doc.data()
+        const postingData: PostingData = {
             appStatus: ApplicationStatus.NOTAPPLIED,
-            appDate: ""
+            appDate: "",
+            company: docData.company,
+            role: docData.role,
+            locations: docData.locations,
+            url: docData.url,
+            date_posted: docData.date_posted
         }
+
+        // const locationIndex = postingData.locations.indexOf("locations")
+        // if (locationIndex != -1) {
+        //     const newLocations = postingData.locations.substring(0, locationIndex + "locations".length)
+        //     postingData.locations = newLocations
+        // }
 
         if (doc.id in userPostings) {
             postingData.appStatus = userPostings[doc.id].appStatus

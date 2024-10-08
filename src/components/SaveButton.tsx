@@ -4,9 +4,10 @@ import LoadingSpinner from "./LoadingSpinner"
 import { EditingContext } from "./EditingContext"
 import { saveUpdatedPostings } from "../firebase/FirestoreFunctions"
 import { AuthContext } from "./AuthManager"
+import SaveButtonProps from "../props/SaveButtonProps"
 
 
-function SaveButton() {
+function SaveButton({ postings, setPostings }: SaveButtonProps) {
 
     const editingContext = useContext(EditingContext)
     const authContext = useContext(AuthContext)
@@ -15,7 +16,7 @@ function SaveButton() {
     const handleClick = async () => {
         setState(ViewState.LOADING)
 
-        await saveUpdatedPostings(editingContext!.edits, authContext!.user!.uid)
+        await saveUpdatedPostings(editingContext!.edits, authContext!.user!.uid, postings, setPostings)
 
         setState(ViewState.DONE)
 

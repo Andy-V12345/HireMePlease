@@ -6,7 +6,7 @@ import { useContext } from "react"
 import { OptionsContext } from "./PostingsTable"
 import { EditingContext } from "./EditingContext"
 
-function StatusIndicator({ id, status, setStatus, index, date, setDate }: StatusIndicatorProps) {
+function StatusIndicator({ id, status, setStatus, index, date, setDate, posting }: StatusIndicatorProps) {
 
     const optionsContext = useContext(OptionsContext)
     const editingContext = useContext(EditingContext)
@@ -47,6 +47,14 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate }: Status
         ApplicationStatus.REJECTED
     ]
 
+    function formatDate(date: Date) {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+
+        return `${year}-${month}-${day}`
+    }
+
     const handleClick = (option: ApplicationStatus) => {
         setStatus(option)
         optionsContext!.setOptionIndex(-1)
@@ -54,7 +62,7 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate }: Status
 
         if (option != ApplicationStatus.NOTAPPLIED) {
             if (date === "" || date === "--") {
-                newDate = new Date().toISOString().split('T')[0]
+                newDate = formatDate(new Date())
                 setDate(newDate)
             }
             else {
@@ -71,12 +79,16 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate }: Status
             appDate: newDate
         }
 
+        posting.data.appDate = newDate
+        posting.data.appStatus = option
+
+        
         editingContext!.setEdits(tmpEdits)
     }
 
     return (
         <div>
-            <div onClick={() => optionsContext!.setOptionIndex(index)} className={`flex flex-row items-center gap-2 w-fit ${statusBgColor[status]} ${statusTextColor[status]} px-3 py-1 rounded-xl`}>
+            <div onClick={() => optionsContext!.setOptionIndex(index)} className={`flex flex-row items-center gap-2 w-fit ${statusBgColor[status]} ${statusTextColor[status]} px-3 py-1 rounded-xl hover:opacity-70`}>
                 <FontAwesomeIcon icon={index === optionsContext!.optionIndex ? faChevronUp : faChevronDown} className="text-xs" />
 
                 <p className={`text-nowrap text-sm font-semibold`}>{statusText[status]}</p>
@@ -91,7 +103,7 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate }: Status
                         <ul>
                             {
                                 options.map((option) => (
-                                    <li key={option} className={`${statusTextColor[option]} text-sm font-semibold my-3`}>
+                                    <li key={option} className={`${statusTextColor[option]} text-sm font-semibold my-3 hover:opacity-70`}>
                                         <button onClick={() => handleClick(option)} className="w-full text-left">
                                             {statusText[option]}
                                         </button>

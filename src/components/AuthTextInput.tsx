@@ -15,7 +15,7 @@ function AuthTextInput({label, placeholder, value, setValue, isSecure, isError, 
         <div className="flex flex-col">
             <p className="text-primary-teal text-md">{label}</p>
 
-            <div className="flex border-b-[3px] border-secondary-teal">
+            <div className="flex border-b-[3px] border-secondary-teal gap-2">
                 <input
                     className={`outline-none appearance-none w-full rounded-none py-2 bg-white text-primary-gray`} 
                     onChange={handleTextChange} 

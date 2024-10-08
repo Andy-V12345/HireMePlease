@@ -2,7 +2,7 @@ import { useContext } from "react"
 import DateAppliedProps from "../props/DateAppliedProps"
 import { EditingContext } from "./EditingContext"
 
-function DateApplied({ id, status, date, setDate }: DateAppliedProps) {
+function DateApplied({ id, status, date, setDate, posting }: DateAppliedProps) {
 
     const editingContext = useContext(EditingContext)
 
@@ -15,6 +15,8 @@ function DateApplied({ id, status, date, setDate }: DateAppliedProps) {
             appStatus: status,
             appDate: newDate
         }
+
+        posting.data.appDate = newDate
 
         editingContext!.setEdits(tmpEdits)
     }
