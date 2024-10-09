@@ -34,7 +34,7 @@ function HomePage() {
         if (position > 50) {
             return setGoToTopVisible(true)
         }
-        else {
+        else if (position < 50) {
             return setGoToTopVisible(false)
         }
     }
