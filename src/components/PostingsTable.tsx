@@ -118,7 +118,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
     return (
             <OptionsContext.Provider value={{optionIndex, setOptionIndex}}>
                 <div className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-2">
                         <h2 className="text-xl text-secondary-teal font-bold">Filters</h2>
                         <div className="flex gap-3">
                             <FilterChip id={0} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-secondary-teal"} textColor={"text-white"} text={"Applied"} />

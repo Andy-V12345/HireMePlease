@@ -28,7 +28,7 @@ function DateApplied({ id, status, date, setDate, posting }: DateAppliedProps) {
     }
     else {
         return (
-            <input value={date} onChange={handleDateChange} type="date" className="appearance-none outline-none" />
+            <input value={date} onChange={handleDateChange} type="date" className="appearance-none outline-none hover:opacity-65" />
         )
     }
 }
