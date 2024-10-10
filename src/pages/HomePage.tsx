@@ -60,10 +60,10 @@ function HomePage() {
                 <div className="bg-white w-11/12 max-w-[1300px] h-full py-10">
                     <div className="flex flex-col gap-10">
                         <div className="flex flex-col gap-4">
-                            <div className="flex justify-between">
+                            <div className="flex w-full justify-between">
                                 <h1 className="text-3xl font-bold text-secondary-teal">Welcome to Hire Me Please,</h1>
 
-                                <button onClick={() => logout()} className="hover:opacity-55 py-1 px-4 text-base font-semibold text-primary-gray bg-secondary-gray rounded-md">
+                                <button onClick={() => logout()} className="hover:opacity-55 py-2 px-4 text-base font-semibold h-fit text-primary-gray bg-secondary-gray rounded-md text-nowrap">
                                     Sign Out
                                 </button>
                             </div>

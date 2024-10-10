@@ -25,7 +25,7 @@ function PostingRow({ id, posting, index }: PostingRowProps) {
                     <p className="py-2 text-sm font-bold w-full text-center bg-secondary-gray rounded-md opacity-45">Closed</p>
 
                 :
-                    <a target="_blank" href={posting.data.url}>
+                    <a target="_blank" href={posting.data.url} className="hover:opacity-65">
                         <p className="py-2 text-sm font-bold w-full text-center bg-secondary-gray rounded-md">Apply</p>
                     </a>
                 }

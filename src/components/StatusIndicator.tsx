@@ -56,34 +56,39 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate, posting 
     }
 
     const handleClick = (option: ApplicationStatus) => {
-        setStatus(option)
-        optionsContext!.setOptionIndex(-1)
-        let newDate = ""
+        if (option != status) {
+            setStatus(option)
+            optionsContext!.setOptionIndex(-1)
+            let newDate = ""
 
-        if (option != ApplicationStatus.NOTAPPLIED) {
-            if (date === "" || date === "--") {
-                newDate = formatDate(new Date())
-                setDate(newDate)
+            if (option != ApplicationStatus.NOTAPPLIED) {
+                if (date === "" || date === "--") {
+                    newDate = formatDate(new Date())
+                    setDate(newDate)
+                }
+                else {
+                    newDate = date
+                }
             }
             else {
-                newDate = date
+                setDate("")
             }
+
+            const tmpEdits = Object.assign({}, editingContext!.edits)
+            tmpEdits[id] = {
+                appStatus: option,
+                appDate: newDate
+            }
+
+            posting.data.appDate = newDate
+            posting.data.appStatus = option
+
+            
+            editingContext!.setEdits(tmpEdits)
         }
         else {
-            setDate("")
+            optionsContext!.setOptionIndex(-1)
         }
-
-        const tmpEdits = Object.assign({}, editingContext!.edits)
-        tmpEdits[id] = {
-            appStatus: option,
-            appDate: newDate
-        }
-
-        posting.data.appDate = newDate
-        posting.data.appStatus = option
-
-        
-        editingContext!.setEdits(tmpEdits)
     }
 
     return (
