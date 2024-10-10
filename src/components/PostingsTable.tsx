@@ -156,11 +156,8 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                     </table>
                 </div>
                 
-                {showSaveButton ?
-                    <SaveButton postings={postings} setPostings={setPostings} />
-                :
-                    null
-                }
+                <SaveButton isVisible={showSaveButton} postings={postings} setPostings={setPostings} />
+                
             </OptionsContext.Provider>
     )
 }
