@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useRef } from "react"
 import PostingsTableProps from "../props/PostingsTableProps"
 import PostingRow from "./PostingRow"
 import { EditingContext } from "./EditingContext"
@@ -27,8 +27,10 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
     const [filters, setFilters] = useState<ColumnFiltersState>([])
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 100,
+        pageSize: 50,
     })
+
+    const [scrollOffset, setScrollOffset] = useState(0)
 
     const chipStatetoFilter: {[key: number]: ApplicationStatus} = {
         1: ApplicationStatus.PENDING,
@@ -123,6 +125,30 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         onColumnFiltersChange: setFilters
     })
 
+    const scrollRef = useRef<HTMLElement>(null)
+
+    const handlePageChange = (page: number) => {
+        table.setPageIndex(page - 1)
+    }
+
+    const updateScrollOffset = () => {
+        setScrollOffset(window.pageYOffset)
+    }
+
+    useEffect(() => {
+        if (scrollOffset > 0) {
+            scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [pagination])
+
+    useEffect(() => {
+        window.addEventListener('scroll', updateScrollOffset)
+
+        return () => {
+            window.removeEventListener('scroll', updateScrollOffset)
+        }
+    }, [])
+
     return (
             <OptionsContext.Provider value={{optionIndex, setOptionIndex}}>
                 <div className="flex flex-col gap-5 pb-10">
@@ -157,9 +183,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                         </tbody>
                     </table>
                     
-
-                    <Pagination loop={false} onChange={(page) => table.setPageIndex(page - 1)} classNames={{cursor: "bg-secondary-teal", item: "bg-secondary-gray text-primary-gray"}} isCompact={true} showControls={true} className={`mx-auto ${table.getPageCount() == 0 ? "hidden" : ""}`} total={table.getPageCount()} initialPage={1} />
-
+                    <Pagination ref={scrollRef} loop={false} onChange={(page) => handlePageChange(page)} classNames={{cursor: "bg-secondary-teal", item: "bg-secondary-gray text-primary-gray"}} isCompact={true} showControls={true} className={`mx-auto ${table.getPageCount() == 0 ? "hidden" : ""}`} total={table.getPageCount()} initialPage={1} />
                 </div>
                 
                 <SaveButton isVisible={showSaveButton} postings={postings} setPostings={setPostings} />
