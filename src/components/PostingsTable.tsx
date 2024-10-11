@@ -7,8 +7,9 @@ import SaveButton from "./SaveButton"
 import FilterChip from "./FilterChip"
 import ChipState from "../enums/ChipState"
 import ApplicationStatus from "../enums/ApplicationStatus"
-import { ColumnFiltersState, createColumnHelper, FilterFn, getCoreRowModel, getFilteredRowModel, Row, useReactTable } from "@tanstack/react-table"
+import { ColumnFiltersState, createColumnHelper, FilterFn, getCoreRowModel, getPaginationRowModel, getFilteredRowModel, Row, useReactTable } from "@tanstack/react-table"
 import { Posting } from "../firebase/FirestoreFunctions"
+import { Pagination } from "@nextui-org/pagination"
 
 export interface OptionsContextType {
     optionIndex: number,
@@ -24,6 +25,10 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
     const [showSaveButton, setShowSaveButton] = useState(false)
     const [chipStates, setChipStates] = useState<ChipState[]>([ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED])
     const [filters, setFilters] = useState<ColumnFiltersState>([])
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 100,
+    })
 
     const chipStatetoFilter: {[key: number]: ApplicationStatus} = {
         1: ApplicationStatus.PENDING,
@@ -109,15 +114,18 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         columns, 
         getCoreRowModel: getCoreRowModel(), 
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: setPagination,
         state: {
-            columnFilters: filters
+            columnFilters: filters,
+            pagination: pagination
         },
         onColumnFiltersChange: setFilters
     })
 
     return (
             <OptionsContext.Provider value={{optionIndex, setOptionIndex}}>
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-5 pb-10">
                     <div className="flex flex-col gap-2">
                         <h2 className="text-xl text-secondary-teal font-bold">Filters</h2>
                         <div className="flex gap-3">
@@ -147,13 +155,11 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                             ))
                             }
                         </tbody>
-
-                        {/* {
-                            postings.map((posting, i) => (
-                                <PostingRow filters={new Set<ApplicationStatus>} key={posting.id} index={i} id={posting.id} posting={posting} />
-                            ))
-                        } */}
                     </table>
+                    
+
+                    <Pagination loop={false} onChange={(page) => table.setPageIndex(page - 1)} classNames={{cursor: "bg-secondary-teal", item: "bg-secondary-gray text-primary-gray"}} isCompact={true} showControls={true} className={`mx-auto ${table.getPageCount() == 0 ? "hidden" : ""}`} total={table.getPageCount()} initialPage={1} />
+
                 </div>
                 
                 <SaveButton isVisible={showSaveButton} postings={postings} setPostings={setPostings} />

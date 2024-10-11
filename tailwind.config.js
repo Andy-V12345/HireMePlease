@@ -1,6 +1,9 @@
+const { nextui } = require("@nextui-org/theme")
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
+    "./node_modules/@nextui-org/theme/dist/components/pagination.js",
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
@@ -14,5 +17,5 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [nextui()],
 }
