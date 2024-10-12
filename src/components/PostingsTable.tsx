@@ -122,6 +122,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
             columnFilters: filters,
             pagination: pagination
         },
+        autoResetPageIndex: false,
         onColumnFiltersChange: setFilters
     })
 
