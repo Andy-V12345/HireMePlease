@@ -67,6 +67,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         }
 
         setFilters([{id: "appStatus", value: newFilters}, {id: "company", value: companySearch}] as ColumnFiltersState)
+        table.setPageIndex(0)
     }, [chipStates, companySearch])
 
     const colHelper = createColumnHelper<Posting>()
@@ -195,7 +196,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                         </tbody>
                     </table>
                     
-                    <Pagination ref={scrollRef} loop={false} onChange={(page) => handlePageChange(page)} classNames={{cursor: "bg-secondary-teal", item: "bg-secondary-gray text-primary-gray"}} isCompact={true} showControls={true} className={`mx-auto ${table.getPageCount() == 0 ? "hidden" : ""}`} total={table.getPageCount()} initialPage={1} />
+                    <Pagination ref={scrollRef} loop={false} onChange={(page) => handlePageChange(page)} classNames={{cursor: "bg-secondary-teal", item: "bg-secondary-gray text-primary-gray"}} isCompact={true} showControls={true} className={`mx-auto ${table.getPageCount() == 0 ? "hidden" : ""}`} page={pagination.pageIndex + 1} total={table.getPageCount()} initialPage={1} />
                 </div>
                 
                 <SaveButton isVisible={showSaveButton} postings={postings} setPostings={setPostings} />
