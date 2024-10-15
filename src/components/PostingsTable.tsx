@@ -10,6 +10,9 @@ import ApplicationStatus from "../enums/ApplicationStatus"
 import { ColumnFiltersState, createColumnHelper, FilterFn, getCoreRowModel, getPaginationRowModel, getFilteredRowModel, Row, useReactTable } from "@tanstack/react-table"
 import { Posting } from "../firebase/FirestoreFunctions"
 import { Pagination } from "@nextui-org/pagination"
+import { Input } from "@nextui-org/input"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
 
 export interface OptionsContextType {
     optionIndex: number,
@@ -29,6 +32,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         pageIndex: 0,
         pageSize: 50,
     })
+    const [companySearch, setCompanySearch] = useState("")
 
     const [scrollOffset, setScrollOffset] = useState(0)
 
@@ -62,8 +66,8 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
             }
         }
 
-        setFilters([{id: "appStatus", value: newFilters}] as ColumnFiltersState)
-    }, [chipStates])
+        setFilters([{id: "appStatus", value: newFilters}, {id: "company", value: companySearch}] as ColumnFiltersState)
+    }, [chipStates, companySearch])
 
     const colHelper = createColumnHelper<Posting>()
 
@@ -87,7 +91,8 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         colHelper.accessor('data.company', {
             id: 'company',
             header: () => "Company",
-            cell: (info) => info.getValue()
+            cell: (info) => info.getValue(),
+            filterFn: "includesString"
         }),
         colHelper.accessor('data.role', {
             id: 'role',
@@ -153,17 +158,23 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
     return (
             <OptionsContext.Provider value={{optionIndex, setOptionIndex}}>
                 <div className="flex flex-col gap-5 pb-10">
-                    <div className="flex flex-col gap-2">
-                        <h2 className="text-xl text-secondary-teal font-bold">Filters</h2>
-                        <div className="flex gap-3">
-                            <FilterChip id={0} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-secondary-teal"} textColor={"text-white"} text={"Applied"} />
-                            <FilterChip id={1} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-yellow-200"} textColor={"text-yellow-700"} text={"Pending"} />
-                            <FilterChip id={2} chipStates={chipStates} setChipStates={setChipStates}  bgColor={"bg-purple-200"} textColor={"text-purple-700"} text={"OA"} />
-                            <FilterChip id={3} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-blue-200"} textColor={"text-blue-700"} text={"Interview"} />
-                            <FilterChip id={4} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-green-200"} textColor={"text-green-700"} text={"Accepted"} />
-                            <FilterChip id={5} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-red-200"} textColor={"text-red-700"} text={"Rejected"} />
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                            <h2 className="text-xl text-secondary-teal font-bold">Filters</h2>
+                            <div className="flex gap-3">
+                                <FilterChip id={0} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-secondary-teal"} textColor={"text-white"} text={"Applied"} />
+                                <FilterChip id={1} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-yellow-200"} textColor={"text-yellow-700"} text={"Pending"} />
+                                <FilterChip id={2} chipStates={chipStates} setChipStates={setChipStates}  bgColor={"bg-purple-200"} textColor={"text-purple-700"} text={"OA"} />
+                                <FilterChip id={3} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-blue-200"} textColor={"text-blue-700"} text={"Interview"} />
+                                <FilterChip id={4} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-green-200"} textColor={"text-green-700"} text={"Accepted"} />
+                                <FilterChip id={5} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-red-200"} textColor={"text-red-700"} text={"Rejected"} />
+                            </div>
                         </div>
+
+                        <Input value={companySearch} onValueChange={setCompanySearch} startContent={<FontAwesomeIcon className="text-xs text-primary-gray mr-1" icon={faSearch} />} classNames={{input: ["bg-secondary-gray text-primary-gray"]}} placeholder="Search for a company"/>
                     </div>
+
+
                     <table className="text-primary-gray">
                         
                         <tr className="text-left border-b-2 border-b-secondary-teal">
