@@ -4,6 +4,7 @@ const { nextui } = require("@nextui-org/theme")
 export default {
   content: [
     "./node_modules/@nextui-org/theme/dist/components/pagination.js",
+    "./node_modules/@nextui-org/theme/dist/components/input.js",
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
