@@ -146,7 +146,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         if (scrollOffset > 0) {
             scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [pagination])
+    }, [pagination.pageIndex])
 
     useEffect(() => {
         window.addEventListener('scroll', updateScrollOffset)
