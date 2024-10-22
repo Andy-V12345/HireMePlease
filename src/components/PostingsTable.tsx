@@ -13,6 +13,7 @@ import { Pagination } from "@nextui-org/pagination"
 import { Input } from "@nextui-org/input"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons"
 
 export interface OptionsContextType {
     optionIndex: number,
@@ -172,7 +173,17 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                             </div>
                         </div>
 
-                        <Input value={companySearch} onValueChange={setCompanySearch} startContent={<FontAwesomeIcon className="text-xs text-primary-gray mr-1" icon={faSearch} />} classNames={{input: ["bg-secondary-gray text-primary-gray"]}} placeholder="Search for a company"/>
+                        <Input 
+                            endContent={
+                                <button disabled={companySearch.trim() == ""} onClick={() => setCompanySearch("")}>
+                                    <FontAwesomeIcon className={`${companySearch.trim() == "" ? `opacity-30` : `opacity-100`} text-base text-primary-gray ml-1 hover:opacity-50`} icon={faXmarkCircle} />
+                                </button>
+                            } 
+                            value={companySearch} 
+                            onValueChange={setCompanySearch} 
+                            startContent={<FontAwesomeIcon className="text-xs text-primary-gray mr-1" icon={faSearch} />} 
+                            classNames={{input: ["bg-secondary-gray text-primary-gray"]}} 
+                            placeholder="Search for a company"/>
                     </div>
 
 
