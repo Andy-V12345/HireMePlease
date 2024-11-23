@@ -2,7 +2,7 @@ import { useContext } from "react"
 import DateAppliedProps from "../props/DateAppliedProps"
 import { EditingContext } from "./EditingContext"
 
-function DateApplied({ id, status, date, setDate, posting }: DateAppliedProps) {
+function DateApplied({ id, status, date, setDate, posting, postings, setPostings }: DateAppliedProps) {
 
     const editingContext = useContext(EditingContext)
 
@@ -12,11 +12,25 @@ function DateApplied({ id, status, date, setDate, posting }: DateAppliedProps) {
 
         const tmpEdits = Object.assign({}, editingContext!.edits)
         tmpEdits[id] = {
+            isFavorite: posting.data.isFavorite,
             appStatus: status,
             appDate: newDate
         }
 
         posting.data.appDate = newDate
+
+        const postingsCopy = [...postings]
+
+        postingsCopy.map(posting => {
+            if (posting.id == id) {
+                return { ...posting }
+            }
+            else {
+                return posting
+            }
+        })
+
+        setPostings(postingsCopy)
 
         editingContext!.setEdits(tmpEdits)
     }

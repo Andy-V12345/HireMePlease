@@ -6,5 +6,7 @@ export default interface DateAppliedProps {
     status: ApplicationStatus,
     date: string
     setDate: React.Dispatch<React.SetStateAction<string>>,
-    posting: Posting
+    posting: Posting,
+    postings: Posting[],
+    setPostings: React.Dispatch<React.SetStateAction<Posting[]>>
 }

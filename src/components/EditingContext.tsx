@@ -12,7 +12,8 @@ export interface EditingContextType {
 
 export type Edit = {
     appStatus: ApplicationStatus,
-    appDate: string
+    appDate: string,
+    isFavorite: boolean,
 }
 
 export const EditingContext = createContext<EditingContextType | null>(null)

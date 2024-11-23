@@ -13,6 +13,7 @@ export type Posting = {
 }
 
 export type PostingData = {
+    isFavorite: boolean,
     company: string,
     role: string,
     locations: string,
@@ -30,13 +31,12 @@ export async function getUserPostings(uid: string) {
     if (docSnap.exists()) {
         userPostings = docSnap.data()
     }
-
     return userPostings
 }
 
 export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: string, postings: Posting[], setPostings: React.Dispatch<React.SetStateAction<Posting[]>>) {
     const userPostings = await getUserPostings(uid)
-    const postingsCopy = [...postings]
+    console.log(edits)
 
     for (const id in edits) {
         if (id in userPostings && edits[id].appStatus == ApplicationStatus.NOTAPPLIED) {
@@ -45,30 +45,22 @@ export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: str
         }
 
         userPostings[id] = edits[id]
-        
-        postingsCopy.map(posting => {
-            if (posting.id == id) {
-                return { ...posting, appStatus: edits[id].appStatus, appDate: edits[id].appDate }
-            }
-            else {
-                return posting
-            }
-        })
-
     }
 
-    setPostings(postingsCopy)
+    setPostings(postings)
     await setDoc(doc(db, "userPostings", uid), userPostings)
 }
 
 export async function getAllPostings(uid: string) {
-    const querySnapshot = await getDocs(collection(db, "postings"))
-    const userPostings = await getUserPostings(uid)
+    
+    const [querySnapshot, userPostings] = await Promise.all([getDocs(collection(db, "postings")), getUserPostings(uid)])
+
     const postings: Posting[] = []
 
     querySnapshot.forEach((doc) => {
         const docData = doc.data()
         const postingData: PostingData = {
+            isFavorite: false,
             appStatus: ApplicationStatus.NOTAPPLIED,
             appDate: "",
             company: docData.company,
@@ -85,6 +77,7 @@ export async function getAllPostings(uid: string) {
         // }
 
         if (doc.id in userPostings) {
+            postingData.isFavorite = userPostings[doc.id].isFavorite === undefined ? false : true
             postingData.appStatus = userPostings[doc.id].appStatus
             postingData.appDate = userPostings[doc.id].appDate
         }
