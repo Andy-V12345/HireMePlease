@@ -69,7 +69,7 @@ function HomePage() {
                             </div>
                             <h2 className="text-lg font-semibold text-primary-gray">
                                 {`A place to tackle the harsh, cold world of tech recruitment. Here, you can see job applications for different roles 
-                                in tech (primarily SWE) and keep track of the (many) roles you'll apply for. Application data is pulled every 6 hours from `}
+                                in tech (primarily SWE) and keep track of the (many) roles you'll apply for. Application data is pulled every 4 hours from `}
                                 <a className="text-secondary-teal" href="https://github.com/Ouckah/Summer2025-Internships">{`Ouckah Github Repo`}</a>
                                 {`.`}
                             </h2>

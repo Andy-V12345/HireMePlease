@@ -34,6 +34,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
         pageSize: 50,
     })
     const [companySearch, setCompanySearch] = useState("")
+    const [showFavs, setShowFavs] = useState<boolean>(false)
 
     const [scrollOffset, setScrollOffset] = useState(0)
 
@@ -47,6 +48,10 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
 
     const statusFilterFn: FilterFn<Posting> = (row: Row<Posting>, columnId: string, filterValue: ApplicationStatus[]) => {
         return filterValue.length == 0 || filterValue.includes(row.getValue(columnId))
+    }
+
+    const favFilterFn: FilterFn<Posting> = (row: Row<Posting>, columnId: string, filterValue: boolean[]) => {
+        return filterValue.includes(row.getValue(columnId))
     }
 
     useEffect(() => {
@@ -67,9 +72,9 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
             }
         }
 
-        setFilters([{id: "appStatus", value: newFilters}, {id: "company", value: companySearch}] as ColumnFiltersState)
+        setFilters([{id: "appStatus", value: newFilters}, {id: "company", value: companySearch}, {id: "isFavorite", value: showFavs ? [true] : [true, false]}] as ColumnFiltersState)
         table.setPageIndex(0)
-    }, [chipStates, companySearch])
+    }, [chipStates, companySearch, showFavs])
 
     const colHelper = createColumnHelper<Posting>()
 
@@ -78,6 +83,12 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
             id: 'id',
             header: () => "ID",
             cell: (info) => info.getValue()
+        }),
+        colHelper.accessor('data.isFavorite', {
+            id: 'isFavorite',
+            header: () => "",
+            cell: (info) => info.getValue(),
+            filterFn: favFilterFn
         }),
         colHelper.accessor('data.appDate', {
             id: 'appDate',
@@ -164,6 +175,9 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                         <div className="flex flex-col gap-2">
                             <h2 className="text-xl text-secondary-teal font-bold">Filters</h2>
                             <div className="flex gap-3">
+                                <button onClick={() => setShowFavs(!showFavs)} className={`${!showFavs ? `bg-secondary-gray` : `bg-yellow-300`} rounded-md py-1 px-3 hover:opacity-75`}>
+                                    <p className={` text-sm font-semibold ${!showFavs ? `text-primary-gray` : `text-yellow-600`}`}>Favorites</p>
+                                </button>
                                 <FilterChip id={0} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-secondary-teal"} textColor={"text-white"} text={"Applied"} />
                                 <FilterChip id={1} chipStates={chipStates} setChipStates={setChipStates} bgColor={"bg-yellow-200"} textColor={"text-yellow-700"} text={"Pending"} />
                                 <FilterChip id={2} chipStates={chipStates} setChipStates={setChipStates}  bgColor={"bg-purple-200"} textColor={"text-purple-700"} text={"OA"} />
@@ -190,6 +204,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
                     <table className="text-primary-gray">
                         
                         <tr className="text-left border-b-2 border-b-secondary-teal">
+                            <th></th>
                             <th className="text-nowrap pr-10">Date Applied</th>
                             <th className="pr-10">Status</th>
                             <th className="py-2">Company</th>
@@ -201,9 +216,8 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
 
                         <tbody>
                             {table.getRowModel().rows.map((row, i) => (
-                                <PostingRow key={row.id} index={i} id={row.getValue("id")} posting={row.original} />
-                            ))
-                            }
+                                <PostingRow key={row.id} index={i} id={row.getValue("id")} posting={row.original} postings={postings} setPostings={setPostings} />
+                            ))}
                         </tbody>
                     </table>
                     

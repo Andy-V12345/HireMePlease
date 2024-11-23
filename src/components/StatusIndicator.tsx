@@ -6,7 +6,7 @@ import { useContext } from "react"
 import { OptionsContext } from "./PostingsTable"
 import { EditingContext } from "./EditingContext"
 
-function StatusIndicator({ id, status, setStatus, index, date, setDate, posting }: StatusIndicatorProps) {
+function StatusIndicator({ id, status, setStatus, index, date, setDate, posting, postings, setPostings }: StatusIndicatorProps) {
 
     const optionsContext = useContext(OptionsContext)
     const editingContext = useContext(EditingContext)
@@ -76,12 +76,26 @@ function StatusIndicator({ id, status, setStatus, index, date, setDate, posting 
 
             const tmpEdits = Object.assign({}, editingContext!.edits)
             tmpEdits[id] = {
+                isFavorite: posting.data.isFavorite,
                 appStatus: option,
                 appDate: newDate
             }
 
             posting.data.appDate = newDate
             posting.data.appStatus = option
+
+            const postingsCopy = [...postings]
+
+            postingsCopy.map(posting => {
+                if (posting.id == id) {
+                    return { ...posting }
+                }
+                else {
+                    return posting
+                }
+            })
+
+            setPostings(postingsCopy)
 
             
             editingContext!.setEdits(tmpEdits)
