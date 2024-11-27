@@ -24,7 +24,7 @@ function AuthTextInput({label, placeholder, value, setValue, isSecure, isError, 
                     type={isSecure && showPassword == false ? `password` : `text`} />
                 
                 {isSecure ? 
-                    <button onClick={() => setShowPassword(!showPassword)}>
+                    <button className="hover:opacity-65" onClick={() => setShowPassword(!showPassword)}>
                         <FontAwesomeIcon className="my-auto" icon={showPassword ? faEyeSlash : faEye} />
                     </button>
                 :   

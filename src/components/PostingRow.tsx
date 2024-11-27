@@ -7,9 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar } from "@fortawesome/free-regular-svg-icons"
 import { faStar as faStarSolid } from "@fortawesome/free-solid-svg-icons"
 import { EditingContext } from "./EditingContext"
+import { OptionsContext } from "./PostingsTable"
 
 function PostingRow({ id, posting, index, postings, setPostings }: PostingRowProps) {
 
+    const optionsContext = useContext(OptionsContext)
     const editingContext = useContext(EditingContext)
     const [status, setStatus] = useState<ApplicationStatus>(posting.data.appStatus)
     const [date, setDate] = useState(posting.data.appDate)
@@ -42,8 +44,12 @@ function PostingRow({ id, posting, index, postings, setPostings }: PostingRowPro
         setIsFavorite(!isFavorite)
     }
 
+    const handleLinkClick = () => {
+        optionsContext!.setClickedId(id)
+    }
+
     return (
-        <tr className="">
+        <tr>
             <td className="pr-10">
                 <button onClick={handleFavoriteToggle}>
                     <FontAwesomeIcon className={`text-yellow-300 text-xl hover:opacity-50`} icon={isFavorite ? faStarSolid : faStar} />
@@ -63,9 +69,11 @@ function PostingRow({ id, posting, index, postings, setPostings }: PostingRowPro
                     <p className="py-2 text-sm font-bold w-full text-center bg-secondary-gray rounded-md opacity-45">Closed</p>
 
                 :
-                    <a target="_blank" href={posting.data.url} className="hover:opacity-65">
-                        <p className="py-2 text-sm font-bold w-full text-center bg-secondary-gray rounded-md">Apply</p>
-                    </a>
+                    <button onClick={handleLinkClick} className={`${id === optionsContext!.clickedId ? `border-2 border-secondary-teal` : ``} py-2 text-sm font-bold w-full text-center bg-secondary-gray rounded-md hover:opacity-65`}>
+                        <a target="_blank" href={posting.data.url}>
+                            <p className={`${id === optionsContext!.clickedId ? `text-secondary-teal` : ``}`}>{id === optionsContext!.clickedId ? "Just Clicked" : "Apply"}</p>
+                        </a>
+                    </button>
                 }
             </td>
             <td>{posting.data.date_posted}</td>
