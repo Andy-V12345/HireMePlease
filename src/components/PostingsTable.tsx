@@ -17,7 +17,9 @@ import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons"
 
 export interface OptionsContextType {
     optionIndex: number,
-    setOptionIndex: React.Dispatch<React.SetStateAction<number>>
+    setOptionIndex: React.Dispatch<React.SetStateAction<number>>,
+    clickedId: string,
+    setClickedId: React.Dispatch<React.SetStateAction<string>>,
 }
 
 export const OptionsContext = createContext<OptionsContextType | null>(null)
@@ -25,6 +27,7 @@ export const OptionsContext = createContext<OptionsContextType | null>(null)
 function PostingsTable({ postings, setPostings }: PostingsTableProps) {
 
     const editingContext = useContext(EditingContext)
+    const [clickedId, setClickedId] = useState("")
     const [optionIndex, setOptionIndex] = useState(-1)
     const [showSaveButton, setShowSaveButton] = useState(false)
     const [chipStates, setChipStates] = useState<ChipState[]>([ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED, ChipState.UNPRESSED])
@@ -169,7 +172,7 @@ function PostingsTable({ postings, setPostings }: PostingsTableProps) {
     }, [])
 
     return (
-            <OptionsContext.Provider value={{optionIndex, setOptionIndex}}>
+            <OptionsContext.Provider value={{optionIndex, setOptionIndex, clickedId, setClickedId}}>
                 <div className="flex flex-col gap-5 pb-10">
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
