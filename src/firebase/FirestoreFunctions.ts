@@ -31,12 +31,12 @@ export async function getUserPostings(uid: string) {
     if (docSnap.exists()) {
         userPostings = docSnap.data()
     }
+
     return userPostings
 }
 
 export async function saveUpdatedPostings(edits: {[key: string]: Edit}, uid: string, postings: Posting[], setPostings: React.Dispatch<React.SetStateAction<Posting[]>>) {
     const userPostings = await getUserPostings(uid)
-    console.log(edits)
 
     for (const id in edits) {
         if (id in userPostings && edits[id].appStatus == ApplicationStatus.NOTAPPLIED) {
@@ -70,14 +70,8 @@ export async function getAllPostings(uid: string) {
             date_posted: docData.date_posted
         }
 
-        // const locationIndex = postingData.locations.indexOf("locations")
-        // if (locationIndex != -1) {
-        //     const newLocations = postingData.locations.substring(0, locationIndex + "locations".length)
-        //     postingData.locations = newLocations
-        // }
-
         if (doc.id in userPostings) {
-            postingData.isFavorite = userPostings[doc.id].isFavorite === undefined ? false : true
+            postingData.isFavorite = userPostings[doc.id].isFavorite === undefined ? false : userPostings[doc.id].isFavorite
             postingData.appStatus = userPostings[doc.id].appStatus
             postingData.appDate = userPostings[doc.id].appDate
         }
